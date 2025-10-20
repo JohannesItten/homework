@@ -6,7 +6,6 @@ INTERFACE="$2"
 declare PREFIX
 declare SUBNET
 declare HOST
-declare OCTETS_AMOUNT=0
 
 print_help() {
 	echo 'Usage: arpscan.sh [IP] [INTERFACE]'
@@ -38,11 +37,11 @@ check_args() {
 	local err_desc=('PREFIX' 'PREFIX' 'SUBNET' 'HOST')
 	# check octet in range 0-255
 	local regex='^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$'
-	local OCTETS_AMOUNT=${#octets[@]}
-	if [[ $OCTETS_AMOUNT < 2 ]]; then
+	local octets_amount=${#octets[@]}
+	if [[ $octets_amount < 2 ]]; then
 		handle_error 'Incorrect PREFIX'
 	fi	
-	for (( i=0; i<$OCTETS_AMOUNT; i++ )); do
+	for (( i=0; i<$octets_amount; i++ )); do
 		local oct=${octets[i]}
 		if [[ ! -z $oct && ! $oct =~ $regex ]]; then
 			handle_error "Incorret ${err_desc[i]}"
