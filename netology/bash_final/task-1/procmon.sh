@@ -234,13 +234,14 @@ get_fd () {
 get_fdinfo() {
 	# get mount point of proc stdout
 	local fname="$1/fdinfo/1"
-	local fdinfo mount_id
+	local fdinfo='' 
+	local mount_id=''
 	if [[ -f "$fname" ]]; then
 		mount_id=$(grep 'mnt_id' "$fname" | awk '{ print $2 }')
 	fi
 	fname="$1/mountinfo"
 	if [[ -n $mount_id && -f "$fname" ]]; then
-		fdinfo=$(grep -e "^$mount_id" "$fname" | cut -d ' ' -f 5)
+		fdinfo=$(awk '$1 == mount_id { print $5 }' mount_id=$mount_id $fname)
 	fi
 	echo "$fdinfo"
 }
@@ -272,7 +273,7 @@ process_proc_list() {
 			func_result=$($func_name "$proc")
 			local val_len col_len
 			val_len="${LOG_VALUE_LEN[$opt]}"
-			col_len=$((val_len + 3))
+			col_len=$((val_len + SPACES_LEN))
 			log_string+=$(printf "%-${col_len}.${val_len}s" "$func_result")
 		done
 		if [[ $MODE == 'interactive' ]]; then
