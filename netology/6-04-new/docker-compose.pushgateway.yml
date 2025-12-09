@@ -1,0 +1,12 @@
+services:
+  pushgateway:
+    image: prom/pushgateway
+    container_name: sergeev-di-netology-pushgateway
+    ports:
+      - 9091:9091
+    cpus: 0.1
+    mem_limit: 64M
+    networks:
+      sergeev-di-my-netology-hw:
+        ipv4_address: 10.10.10.11
+    restart: unless-stopped

@@ -1,0 +1,10 @@
+groups:
+  - name: sergeevdi-alerts
+    rules:
+      - alert: sergeevdiHigh
+        expr: sergeevdi > 15
+        labels:
+          severity: warning
+        annotations:
+          summary: "Metric sergeevdi is high"
+          description: "Metric sergeevdi is higher than 15."

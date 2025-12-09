@@ -1,0 +1,18 @@
+services:
+  alertmanager:
+    image: prom/alertmanager
+    container_name: sergeev-di-netology-alertmanager
+    volumes:
+      - ./alertmanager/:/etc/alertmanager/
+      - alertmanager-data:/alertmanager
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --storage.path=/alertmanager
+    ports:
+      - 9093:9093
+    cpus: 0.10
+    mem_limit: 64M
+    networks:
+      sergeev-di-my-netology-hw:
+        ipv4_address: 10.10.10.13
+    restart: unless-stopped

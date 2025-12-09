@@ -1,0 +1,17 @@
+services:
+  grafana:
+    image: grafana/grafana
+    container_name: sergeev-di-netology-grafana
+    environment:
+      GF_PATHS_CONFIG: /etc/grafana/custom.ini
+    ports:
+      - 80:3000
+    volumes:
+      - ./grafana:/etc/grafana
+      - grafana-data:/var/lib/grafana
+    cpus: 0.30
+    mem_limit: 512M
+    networks:
+      sergeev-di-my-netology-hw:
+        ipv4_address: 10.10.10.12
+    restart: unless-stopped

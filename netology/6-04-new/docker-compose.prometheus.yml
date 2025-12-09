@@ -1,0 +1,16 @@
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: sergeev-di-netology-prometheus
+    command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prom-data:/prometheus
+    cpus: 0.25
+    mem_limit: 256M
+    networks:
+      sergeev-di-my-netology-hw:
+        ipv4_address: 10.10.10.10
+    restart: unless-stopped
