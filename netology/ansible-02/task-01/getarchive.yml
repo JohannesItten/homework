@@ -1,0 +1,8 @@
+- name: Get Apache Kafka Archive
+  hosts: proxmox
+  tasks:
+    - name: Download Apache Kafka archive
+      get_url:
+        url: "https://dlcdn.apache.org/kafka/4.1.1/kafka_2.13-4.1.1.tgz"
+        dest: "/tmp/apache-kafka.tgz"
+        mode: '0644'

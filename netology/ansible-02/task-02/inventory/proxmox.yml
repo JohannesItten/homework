@@ -1,0 +1,4 @@
+all:
+  children:
+    proxmox:
+      hosts: 10.5.1.110

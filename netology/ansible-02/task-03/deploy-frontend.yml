@@ -1,0 +1,4 @@
+- name: Deploy frontend application
+  hosts: proxmox
+  roles:
+    - role: frontend

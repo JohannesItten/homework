@@ -1,0 +1,15 @@
+- name: Tuned
+  hosts: proxmox
+  tasks:
+    - name: Install tuned package
+      apt: 
+        name: tuned
+        state: present
+        update_cache: yes
+      become: yes
+    - name: Enable and start tuned service
+      systemd:
+        name: tuned
+        enabled: yes
+        state: started
+      become : yes

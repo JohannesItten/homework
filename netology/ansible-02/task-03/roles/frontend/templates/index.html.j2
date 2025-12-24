@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <title>System Information</title>
+    </head>
+    <body>
+        <h1>System Information</h1>
+        <ul>
+            <li>CPU:</li>
+            {% for i in range(0, cpu|length , 3) %}
+                <ul>
+                    <li>{{ cpu[i + 1] }}, {{ cpu[i + 2] }}</li>
+                </ul>
+            {% endfor %}
+            <li>RAM: {{ memory }} MB</li>
+            <li>Disk[0] partitions:</li>
+            {% for name, props in partitions.items() %}
+                <ul>
+                    <li>{{ name }} {{ props['size'] }}</li>
+                </ul>
+            {% endfor %}
+            <li>IP Address: {{ ip_address }}</li>
+        </ul>
+    </body>
+</html>

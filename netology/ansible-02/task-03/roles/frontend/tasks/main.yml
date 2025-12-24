@@ -1,0 +1,58 @@
+- name: Install Apache web server
+  apt:
+    name: apache2
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Ensure Apache is running and enabled
+  service:
+    name: apache2
+    state: started
+    enabled: yes
+  become: true
+
+- name: Change default Apache index page
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    mode: "0644"
+    owner: www-data
+    group: www-data
+  vars:
+    cpu: "{{ ansible_facts['processor'] }}"
+    memory: "{{ ansible_facts['memtotal_mb'] }}"
+    partitions: "{{ ansible_facts['devices']['sda']['partitions'] }}"
+    ip_address: "{{ ansible_facts['default_ipv4']['address'] }}"
+  notify: Restart Apache
+  become: true
+
+- name: Check port 80 is open
+  wait_for:
+    port: 80
+    state: started
+    timeout: 10
+  register: wait_result
+  ignore_errors: true
+
+# Ubuntu specific, but it's just a homework
+- name: Allow TCP on port 80
+  community.general.ufw:
+    rule: allow
+    port: "80"
+    proto: tcp
+    state: reloaded
+  when: wait_result.failed
+  become: true
+
+- name: Check site is reachable
+  uri:
+    url: http://{{ ansible_facts['default_ipv4']['address'] }}
+    method: GET
+    status_code: 200
+    return_content: false
+  register: website_health
+
+- name: Debug site availability
+  debug:
+    msg: "Index.html status code is {{ website_health.status }}"

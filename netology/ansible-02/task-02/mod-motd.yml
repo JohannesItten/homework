@@ -1,0 +1,31 @@
+- name: Modify MOTD
+  hosts: proxmox
+  tasks:
+    - name: print facts
+      ansible.builtin.debug:
+        msg: 
+          - "{{ ansible_facts['hostname'] }}"
+          - "{{ ansible_facts['default_ipv4']['address'] }}"
+    - name: Change sshd_config to enable PrintMotd
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#PrintMotd'
+        line: 'PrintMotd yes'
+      notify:
+        - Restart SSH daemon
+      become: yes
+    - name: Set custom MOTD
+      template:
+        src: ./templates/motd.j2
+        dest: /etc/motd
+        mode: '0644'
+      vars:
+        hostname: "{{ ansible_facts['hostname'] }}"
+        ip_addr: "{{ ansible_facts['default_ipv4']['address'] }}"
+      become: yes
+  handlers:
+    - name: Restart SSH daemon
+      service:
+        name: ssh
+        state: restarted
+      become: yes
