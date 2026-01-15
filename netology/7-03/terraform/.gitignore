@@ -47,3 +47,4 @@ terraform.rc
 # Ignore backups and old versions of files
 *.bak
 *.old
+.DS_Store
