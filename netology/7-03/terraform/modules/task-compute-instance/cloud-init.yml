@@ -1,0 +1,8 @@
+#cloud-config
+users:
+  - name: ansible
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKxACXG6mkk+CML+NsTyJyteiyszpM7m1Pmq+AW7cQ19 yaprac terraform

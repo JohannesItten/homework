@@ -1,0 +1,22 @@
+- name: Prepare servers
+  hosts: all
+  tasks:
+    - name: Update apt packages
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+        upgrade: no
+      become: true
+
+- name: Deploy nginx web server
+  hosts: webservers
+  roles:
+    - webserver
+
+- name: Deploy Traefik reverse proxy
+  hosts: traefik
+  roles:
+    - traefik
+  vars_files:
+    - "{{ playbook_dir }}/group_vars/traefik.yml"
+    - "{{ playbook_dir }}/group_vars/traefik-webservers.yml"

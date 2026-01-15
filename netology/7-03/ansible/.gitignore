@@ -1,0 +1,10 @@
+*.log
+*.py[co]
+*~
+*.swp
+*.retry
+sandbox
+
+*.vault
+# Ignore Ansible venv
+.venv/

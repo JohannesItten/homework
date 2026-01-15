@@ -1,0 +1,50 @@
+- name: Download Traefik binary
+  get_url:
+    url: "https://github.com/traefik/traefik/releases/download/{{ traefik_version }}/traefik_{{ traefik_version }}_linux_amd64.tar.gz"
+    dest: /tmp/traefik.tar.gz
+    mode: '0755'
+
+- name: Extract Traefik
+  unarchive:
+    src: /tmp/traefik.tar.gz
+    dest: /usr/local/bin/
+    remote_src: yes
+  become: true
+
+- name: Create Traefik config directory
+  file:
+    path: "{{ config_dir }}"
+    state: directory
+    mode: '0755'
+  become: true
+
+- name: Deploy static Traefik config
+  template:
+    src: traefik-static.toml.j2
+    dest: "{{ config_dir }}/{{ static_config_name }}"
+  become: true
+
+- name: Deploy dynamic Traefik config
+  template:
+    src: traefik-dynamic.toml.j2
+    dest: "{{ config_dir }}/{{ dynamic_config_name }}"
+  become: true
+
+- name: Create Traefik systemd service
+  template:
+    src: traefik.service.j2
+    dest: /etc/systemd/system/traefik.service
+    mode: '0644'
+  become: true
+
+- name: Reload systemd daemon if needed
+  systemd:
+    daemon_reload: yes
+  become: true
+
+- name: Enable and start Traefik
+  systemd:
+    name: traefik
+    state: started
+    enabled: yes
+  become: true

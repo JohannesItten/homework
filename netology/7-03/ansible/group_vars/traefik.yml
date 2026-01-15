@@ -1,0 +1,4 @@
+traefik_version: v3.6.7
+config_dir: /etc/traefik
+static_config_name: "traefik.toml"
+dynamic_config_name: "dynamic.toml"

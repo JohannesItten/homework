@@ -1,0 +1,12 @@
+[http.services]
+[http.services.web-service.loadBalancer]
+{% for server in web_servers %}
+  [[http.services.web-service.loadBalancer.servers]]
+    url = "http://{{ server.ip }}:{{ server.port }}"
+{% endfor %}
+
+[http.routers]
+  [http.routers.web-router]
+    rule = "PathPrefix(`/`)"
+    service = "web-service"
+    entryPoints = ["http"]

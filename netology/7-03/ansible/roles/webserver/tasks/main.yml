@@ -1,0 +1,23 @@
+- name: Install Nginx web server
+  apt:
+    name: nginx
+    state: present
+  become: true
+
+- name: Ensure Nginx is started and enabled
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+  become: true
+
+- name: Replace default nginx index page
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    mode: "0644"
+    owner: www-data
+    group: www-data
+  vars:
+    ip_address: "{{ ansible_facts['default_ipv4']['address'] }}"
+  become: true

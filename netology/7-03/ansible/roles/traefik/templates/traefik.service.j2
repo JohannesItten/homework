@@ -1,0 +1,10 @@
+[Unit]
+Description=Traefik
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/traefik --configFile={{ config_dir }}/{{ static_config_name }}
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
