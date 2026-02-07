@@ -1,0 +1,62 @@
+include:
+  - template: Security/SAST.gitlab-ci.yml
+
+stages:
+  - test
+  - build
+  - release
+
+variables:
+  GO_VERSION: "1.16"
+  GOCACHE: "$CI_PROJECT_DIR/.cache/go-build"
+
+cache:
+  paths:
+    - .cache/go-build
+
+test:
+  stage: test
+  image: golang:${GO_VERSION}
+  script:
+    - go test ./... -v
+  rules:
+    - changes:
+        - "**/*.go"
+    - when: never
+
+semgrep-sast:
+  rules:
+    - changes:
+        - "**/*.go"
+    - when: never
+
+build:
+  stage: build
+  image: golang:${GO_VERSION}
+  needs: []
+  script:
+    - go build -o hello-app main.go
+    - echo "BUILD_JOB_ID=$CI_JOB_ID" >> build-info.env
+  artifacts:
+    paths:
+      - hello-app
+    reports:
+      dotenv: build-info.env
+    expire_in: 1 day
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/cli:latest
+  needs:
+    - job: build
+      artifacts: true
+  script:
+    - echo "Release..."
+  release:
+    name: "Release v${BUILD_JOB_ID}"
+    tag_name: "v${BUILD_JOB_ID}"
+    description: "Automated release v${BUILD_JOB_ID}"
+    assets:
+      links:
+        - name: "hello-app"
+          url: "${CI_SERVER_URL}/${CI_PROJECT_PATH}/-/jobs/${BUILD_JOB_ID}/artifacts/raw/hello-app"
