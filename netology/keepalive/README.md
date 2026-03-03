@@ -6,6 +6,21 @@
 - Для проверки корректности настройки, разорвите один из кабелей между одним из маршрутизаторов и Switch0 и запустите ping между PC0 и Server0.
 - На проверку отправьте получившуюся схему в формате pkt и скриншот, где виден процесс настройки маршрутизатора.
 
+### Задание 1
+Либо в файле уже все было настроено, либо я что-то не понял. Но глобально делал бы:
+```
+enable
+config
+interface g0/0
+astandby version 2
+standby 0 ip 192.168.0.1
+standby 0 priority 100
+standby 0 preempt
+```
+
+![cisco packet tracer](./task-01/assets/img-01.png)
+![cisco packet tracer](./task-01/assets/img-01.png)
+
 ------
 
 
